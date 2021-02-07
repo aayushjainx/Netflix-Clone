@@ -1,29 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import db from '../backend/firebase';
 import { selectUser } from '../features/userSlice';
 import '../styles/PlanScreen.css';
 import { loadStripe } from '@stripe/stripe-js';
+import { active, selectSubscription } from '../features/subscriptionSlice';
 
 function PlanScreen() {
   const [products, setProducts] = useState();
   const user = useSelector(selectUser);
+  const activesubs = useSelector(selectSubscription);
   const [subscription, setSubscription] = useState(null);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    db.collection('customers')
-      .doc(user.uid)
-      .collection('subscriptions')
-      .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach(async (subscription) => {
-          setSubscription({
-            role: subscription.data().role,
-            current_period_end: subscription.data().current_period_end.seconds,
-            current_period_start: subscription.data().current_period_start.seconds,
-          });
-        });
-      });
+    setSubscription(activesubs);
   }, []);
 
   useEffect(() => {

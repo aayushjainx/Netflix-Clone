@@ -32,6 +32,7 @@ function SignupScreen({ email }) {
             <form>
               <h1>Sign Up</h1>
               <input
+                name='email'
                 ref={emailRef}
                 placeholder='Email'
                 type='email'

@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { auth } from '../backend/firebase';
 import '../styles/SigninScreen.css';
 import SignupScreen from './SignupScreen';
@@ -7,6 +8,7 @@ function SigninScreen() {
   const [signUp, setSignUp] = useState(false);
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
+  const history = useHistory();
 
   const signIn = (e) => {
     e.preventDefault();
@@ -14,6 +16,7 @@ function SigninScreen() {
       .signInWithEmailAndPassword(emailRef.current.value, passwordRef.current.value)
       .then((authUser) => {
         console.log(authUser);
+        history.push('/browse');
       })
       .catch((error) => {
         alert(error.message);
@@ -29,7 +32,7 @@ function SigninScreen() {
           <div className='signinScreen'>
             <form>
               <h1>Sign In</h1>
-              <input ref={emailRef} placeholder='Email' type='email' />
+              <input ref={emailRef} placeholder='Email' type='email' name='email' />
               <input ref={passwordRef} placeholder='Password' type='password' />
               <button type='submit' onClick={signIn}>
                 Sign In

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { auth } from '../backend/firebase';
+import { selectSubscription } from '../features/subscriptionSlice';
 import { selectUser } from '../features/userSlice';
 import '../styles/ProfileScreen.css';
 import Nav from './Nav';
@@ -8,6 +9,7 @@ import PlanScreen from './PlanScreen';
 
 function ProfileScreen() {
   const user = useSelector(selectUser);
+  const activeSubscription = useSelector(selectSubscription);
   return (
     <div className='profileScreen'>
       <Nav />
@@ -18,7 +20,7 @@ function ProfileScreen() {
           <div className='profileScreen__details'>
             <h2>{user.email}</h2>
             <div className='profileScreen__plans'>
-              <h3>Plans</h3>
+              <h3>Plans {activeSubscription ? `(Current Plan: ${activeSubscription.role})` : null}</h3>
               <PlanScreen />
               <button onClick={() => auth.signOut()} className='profileScreen__signOut'>
                 Sign Out
