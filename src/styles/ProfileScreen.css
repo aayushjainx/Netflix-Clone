@@ -1,5 +1,6 @@
 .profileScreen {
-  height: 100vh;
+  margin-top: -50px;
+  height: 675px;
   color: white;
 }
 
