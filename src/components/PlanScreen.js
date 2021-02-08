@@ -10,7 +10,7 @@ function PlanScreen() {
   const [products, setProducts] = useState();
   const user = useSelector(selectUser);
   const activesubs = useSelector(selectSubscription);
-  const [subscription, setSubscription] = useState(null);
+  const [subscription, setSubscription] = useState(activesubs);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -37,7 +37,7 @@ function PlanScreen() {
       });
   }, []);
   console.log(products, 'products');
-  console.log(subscription, 'subscription');
+  console.log(activesubs, 'subscription');
 
   const loadCheckout = async (priceId) => {
     const docRef = await db.collection('customers').doc(user.uid).collection('checkout_sessions').add({
@@ -63,12 +63,10 @@ function PlanScreen() {
   return (
     <div className='planScreen'>
       <br />
-      {subscription && (
-        <p>Renewal Date: {new Date(subscription?.current_period_end * 1000).toLocaleDateString()}</p>
-      )}
+      {activesubs && <p>Renewal Date: {new Date(activesubs?.current_period_end * 1000).toLocaleDateString()}</p>}
       {products
         ? Object.entries(products).map(([productId, productData]) => {
-            const isCurrPackage = productData.name?.toLowerCase().includes(subscription?.role);
+            const isCurrPackage = productData.name?.toLowerCase().includes(activesubs?.role);
             return (
               <div
                 className={`${isCurrPackage && 'plansScreen__plan--disabled'} plansScreen__plan`}

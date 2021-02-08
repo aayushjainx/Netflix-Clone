@@ -15,8 +15,8 @@ function SigninScreen() {
     auth
       .signInWithEmailAndPassword(emailRef.current.value, passwordRef.current.value)
       .then((authUser) => {
+        history.push('/');
         console.log(authUser);
-        history.push('/browse');
       })
       .catch((error) => {
         alert(error.message);

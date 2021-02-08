@@ -24,6 +24,18 @@ function App() {
           })
         );
 
+        console.log(userAuth, 'userAuth');
+      } else {
+        dispatch(logout());
+        dispatch(subslogout());
+      }
+    });
+    return unsubscribe;
+  }, [dispatch]);
+
+  useEffect(() => {
+    auth.onAuthStateChanged((userAuth) => {
+      if (userAuth) {
         db.collection('customers')
           .doc(user.uid)
           .collection('subscriptions')
@@ -39,22 +51,27 @@ function App() {
               );
             });
           });
-
-        console.log(userAuth, 'userAuth');
-      } else {
-        dispatch(logout());
-        dispatch(subslogout());
       }
     });
-    return unsubscribe;
-  }, [dispatch]);
+  }, [user]);
 
-  const PrivateRoute = () =>
-    subscription ? (
-      <Route path='/browse' component={HomeScreen} />
-    ) : (
-      <Route path='/profile' component={ProfileScreen} />
-    );
+  const PrivateRoute = ({ component: Component, ...rest }) => (
+    <Route
+      {...rest}
+      render={(props) =>
+        subscription ? (
+          <Component {...props} />
+        ) : (
+          <Redirect
+            to={{
+              pathname: '/profile',
+              state: { from: props.location },
+            }}
+          />
+        )
+      }
+    />
+  );
 
   return (
     <div className='App'>
@@ -63,9 +80,7 @@ function App() {
           <LoginScreen />
         ) : (
           <Switch>
-            <Route exact path='/browse'>
-              <HomeScreen />
-            </Route>
+            <Route path='/browse' component={HomeScreen} />
             <Route exact path='/profile'>
               <ProfileScreen />
             </Route>

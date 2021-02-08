@@ -27,6 +27,7 @@
 
 .profileScreen__info > img {
   height: 100px;
+  cursor: pointer;
 }
 
 .profileScreen__details {
